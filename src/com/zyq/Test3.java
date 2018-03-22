@@ -3,21 +3,20 @@ package com.zyq;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Test1 {
-
+public class Test3 {
     private final static int N = 16;
-    private final static double IP_CFCB = 4000.0d;    //住院病人惩罚成本
-    private final static double IP_DTCB = 2000.0d;    //住院病人等待成本
-    private final static double IP_SY = 8000.0d;     //住院病人收益
-    private final static double IP_GL = 0.4d;    //住院病人到达的概率
-    private final static double SOP_CFCB = 2000.0d;   //门诊病人惩罚成本
-    private final static double SOP_DTCB = 1000.0d;   //门诊病人等待成本
-    private final static double SOP_SY = 10000.0d;     //门诊病人收益
-    private final static double EP_GL = 0.6d;    //急诊病人到达的概率
-    private final static double ZY_GL_00 = 0.24d;   //转移概率 {住院病人到达，急诊病人到达}={0，0}
-    private final static double ZY_GL_01 = 0.36d;   //转移概率 {住院病人到达，急诊病人到达}={0，1}
-    private final static double ZY_GL_10 = 0.16d;   //转移概率 {住院病人到达，急诊病人到达}={1，0}
-    private final static double ZY_GL_11 = 0.24d;   //转移概率 {住院病人到达，急诊病人到达}={1，1}
+    private final static int IP_CFCB = 2000;    //住院病人惩罚成本
+    private final static int IP_DTCB = 1000;    //住院病人等待成本
+    private final static int IP_SY = 10000;     //住院病人收益
+    private final static double IP_GL = 0.4f;    //住院病人到达的概率
+    private final static int SOP_CFCB = 4000;   //门诊病人惩罚成本
+    private final static int SOP_DTCB = 2000;   //门诊病人等待成本
+    private final static int SOP_SY = 8000;     //门诊病人收益
+    private final static double EP_GL = 0.6f;    //急诊病人到达的概率
+    private final static double ZY_GL_00 = 0.24f;   //转移概率 {住院病人到达，急诊病人到达}={0，0}
+    private final static double ZY_GL_01 = 0.36f;   //转移概率 {住院病人到达，急诊病人到达}={0，1}
+    private final static double ZY_GL_10 = 0.16f;   //转移概率 {住院病人到达，急诊病人到达}={1，0}
+    private final static double ZY_GL_11 = 0.24f;   //转移概率 {住院病人到达，急诊病人到达}={1，1}
     //因为只有两台CT,所以行动集是有限的，行动集{门诊病人数量，住院病人数量，急诊病人数量，是否接受病人}
     private final static int[][] A = {{0, 0, 0, 0}, {0, 0, 0, 1}, {0, 0, 1, 0}, {0, 0, 1, 1}, {0, 0, 2, 0}, {0, 0, 2, 1}, {0, 1, 0, 0}, {0, 1, 0, 1},
             {0, 1, 1, 0}, {0, 1, 1, 1}, {0, 2, 0, 0}, {0, 2, 0, 1}, {1, 0, 0, 0}, {1, 0, 0, 1}, {1, 0, 1, 0}, {1, 0, 1, 1}, {1, 1, 0, 0}, {1, 1, 0, 1},
@@ -37,15 +36,11 @@ public class Test1 {
      */
     public static double getR(int[] A, int[] W, int n) {
         double r = 0.0d;
-        r = IP_SY * A[1] - (W[1] - A[1]) * IP_DTCB
-                + (SOP_SY * A[0] - (W[0] - A[0]) * SOP_DTCB);
-        /*
         if (n == N) {
             r = IP_SY * A[1] + SOP_SY * A[0];
         } else {
             r = IP_SY * A[1] - (W[1] - A[1]) * IP_DTCB + (SOP_SY * A[0] - (W[0] - A[0]) * SOP_DTCB);
         }
-        */
         return r;
     }
 
@@ -139,14 +134,9 @@ public class Test1 {
                 if (a[0] > S[0] || a[1] > S[1] || a[2] != S[2]) {
                     continue;
                 } else {
-                    /*
-                    System.out.println(getR(a, S, n));
-                    System.out.println(ZY_GL_00 * getValOfMap(getMaxVS(getNextState(a, S, 0, 0), n + 1)));
-                    System.out.println(ZY_GL_01 * getValOfMap(getMaxVS(getNextState(a, S, 0, 1), n + 1)));
-                    System.out.println(ZY_GL_10 * getValOfMap(getMaxVS(getNextState(a, S, 1, 0), n + 1)));
-                    System.out.println(ZY_GL_11 * getValOfMap(getMaxVS(getNextState(a, S, 1, 1), n + 1)));
-                    */
-                    Double d = new Double(getR(a, S, n) + ZY_GL_00 * getValOfMap(getMaxVS(getNextState(a, S, 0, 0), n + 1))
+                    Double d = new Double(0.0d);
+
+                    d = new Double(getR(a, S, n) + ZY_GL_00 * getValOfMap(getMaxVS(getNextState(a, S, 0, 0), n + 1))
                             + ZY_GL_01 * getValOfMap(getMaxVS(getNextState(a, S, 0, 1), n + 1))
                             + ZY_GL_10 * getValOfMap(getMaxVS(getNextState(a, S, 1, 0), n + 1))
                             + ZY_GL_11 * getValOfMap(getMaxVS(getNextState(a, S, 1, 1), n + 1)));
@@ -196,7 +186,7 @@ public class Test1 {
 
     public static void main(String[] args) throws Exception {
         for (int[] s : S15) {
-            Map<int[], Double> map = getMaxVS(s, 14);
+            Map<int[], Double> map = getMaxVS(s, 15);
             for (Map.Entry<int[], Double> rentry : map.entrySet()) {
                 System.out.println(arrayToString(s) + ":" + arrayToString(rentry.getKey()) + ":" + rentry.getValue());
             }
@@ -209,6 +199,4 @@ public class Test1 {
         }
         */
     }
-
-
 }
